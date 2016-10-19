@@ -18,18 +18,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class HttpHelper {
 	
-	private static final String BKND_URL = "https://2016.api.levelmoney.com/api/v2/core/get-all-transactions";
+	private static final String BKND_URL = "https://2016.api.levelmoney.com/api/v2/core/";
 	private static final String API_TOKEN = "AppTokenForInterview";
 	private static final String TOKEN = "02A99E1646645488172CA089AD9CE184";
 	private static final int UID = 1110590645;
 
 
-	public String httpClientPost(String urlStr, String params) {
+	public String httpClientPost(String transactionType, String params) {
 
 		HttpURLConnection conn = null;
 		String output = null;
 		try {
-			URL url = new URL(BKND_URL);
+			URL url = new URL(BKND_URL + transactionType);
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setDoOutput(true);
 			conn.setRequestMethod("POST");
@@ -51,7 +51,6 @@ public class HttpHelper {
 				throw new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());
 			}
 			BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-			System.out.println("Output from Server .... \n");
 			output = br.readLine();
 		} catch (MalformedURLException e) {
 			e.printStackTrace();

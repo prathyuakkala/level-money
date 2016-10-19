@@ -29,11 +29,11 @@ public class LMTransactionsController {
 		try {
 			String uri = request.getRequestURI();
 			if( uri.endsWith("getSearchResult")) {
-				lmTransactionsJson = lmTransactionsService.getAllTransactions();
-			} else if( uri.endsWith("getSearchResult") ){
-				lmTransactionsJson = lmTransactionsService.getAllTransactions();
+				lmTransactionsJson = lmTransactionsService.getTransactions();
+			} else if( uri.endsWith("getSearchResultWithoutDougnuts") ){
+				lmTransactionsJson = lmTransactionsService.getTransactionsWithoutDonuts();
 			} else {
-				lmTransactionsJson = lmTransactionsService.getAllTransactions();
+				lmTransactionsJson = lmTransactionsService.getTransactionsWithoutCCPayments();
 			}
 			if (!lmTransactionsJson.isEmpty()) {
 				result.setCode("200");
@@ -41,9 +41,8 @@ public class LMTransactionsController {
 				result.setResult(lmTransactionsJson);
 			} else {
 				result.setCode("204");
-				result.setMsg("No user!");
+				result.setMsg("No Transaction Found !!!! ");
 			}
-
 		} catch (Exception exception) {
 			result.setCode("500");
 			result.setMsg("Exception occurec while searching Transactions");

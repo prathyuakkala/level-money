@@ -12,6 +12,10 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 public interface LMTransactionsService {
 	
 	
-	public Map<String, Object>  getAllTransactions() throws JsonParseException, JsonMappingException, IOException;
+	public Map<String, Object>  getTransactions() throws JsonParseException, JsonMappingException, IOException;
+	
+	public Map<String, Object>  getTransactionsWithoutDonuts() throws JsonParseException, JsonMappingException, IOException;
+	
+	public Map<String, Object>  getTransactionsWithoutCCPayments() throws JsonParseException, JsonMappingException, IOException;
 
 }

@@ -9,8 +9,8 @@
 Access ```http://localhost:8080/levelmoney```
 
 ###3. To import this project into Eclipse IDE
-1. got the project and run maven command "mvn eclipse:eclipse"
-2. once the mvn command executed successfully Import into Eclipse via **existing projects into workspace** option.
+1. Get the project and run maven command "mvn eclipse:eclipse"
+2. Once the mvn command is executed successfully import into Eclipse via "existing projects into workspace" option.
 3. Done.
 
 

@@ -24,11 +24,35 @@ public class LMTransactionsServiceImpl implements LMTransactionsService {
 	@Autowired
 	private HttpHelper httpHelper;
 
-	public Map getAllTransactions() throws JsonParseException, JsonMappingException, IOException {
+	public Map getTransactions() throws JsonParseException, JsonMappingException, IOException {
+		return populateTransactionToMap(getAllTransactionsFromLM());
+	}
 
+	@Override
+	public Map<String, Object> getTransactionsWithoutDonuts()
+			throws JsonParseException, JsonMappingException, IOException {
+		LMTransactionList lmTransactionList = getAllTransactionsFromLM();
+		for( LMTransaction lmTransaction : lmTransactionList.getTransactions()) {
+			
+		}
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> getTransactionsWithoutCCPayments()
+			throws JsonParseException, JsonMappingException, IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	private LMTransactionList getAllTransactionsFromLM() throws IOException, JsonParseException, JsonMappingException {
 		ObjectMapper mapper = new ObjectMapper();
-		String jsonAsString = httpHelper.httpClientPost("", "");
-		LMTransactionList lmTransactionList = mapper.readValue(jsonAsString,LMTransactionList.class);
+		String jsonAsString = httpHelper.httpClientPost("get-all-transactions", "");
+		return mapper.readValue(jsonAsString,LMTransactionList.class);
+	}
+
+	private Map populateTransactionToMap(LMTransactionList lmTransactionList) {
+		
 		Map<String, List<LMTransaction>> monthlyExpdtrMap = new HashMap<String, List<LMTransaction>>();
 		for( LMTransaction lmTransaction : lmTransactionList.getTransactions()) {
 			Calendar cal = Calendar.getInstance();
