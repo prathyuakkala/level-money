@@ -1,71 +1,53 @@
 package com.capone.web.controller;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
-import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.capone.web.service.LMTransactionsService;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.capone.web.jsonview.Views;
 import com.capone.web.model.LMResponseBody;
-import com.capone.web.model.LMTransactionList;
-import com.capone.web.model.SearchCriteria;
+import com.capone.web.service.LMTransactionsService;
+import com.fasterxml.jackson.annotation.JsonView;
 
 @RestController
 public class LMTransactionsController {
 
 	@Autowired
 	private LMTransactionsService lmTransactionsService;
-	
+
 	@JsonView(Views.Public.class)
-	@RequestMapping(value = "/search/api/getSearchResult")
-	public LMResponseBody getAllTransactions(@RequestBody SearchCriteria search) throws JsonParseException, JsonMappingException, IOException {
+	@RequestMapping(value = { "/search/api/getSearchResult", "/search/api/getSearchResultWithoutDougnuts",
+			"/search/api/getSearchResultWithoutCC" })
+	public LMResponseBody getAllTransactions( HttpServletRequest request ) {
 
 		LMResponseBody result = new LMResponseBody();
-
-		if (isValidSearchCriteria(search)) {
-			LMTransactionList lmTransaction = lmTransactionsService.getAllTransactions();
-			if (lmTransaction.getTransactions().size() > 0) {
+		Map<String, Object> lmTransactionsJson = null;
+		try {
+			String uri = request.getRequestURI();
+			if( uri.endsWith("getSearchResult")) {
+				lmTransactionsJson = lmTransactionsService.getAllTransactions();
+			} else if( uri.endsWith("getSearchResult") ){
+				lmTransactionsJson = lmTransactionsService.getAllTransactions();
+			} else {
+				lmTransactionsJson = lmTransactionsService.getAllTransactions();
+			}
+			if (!lmTransactionsJson.isEmpty()) {
 				result.setCode("200");
-				result.setMsg("");
-				result.setResult(lmTransaction.getTransactions());
+				result.setMsg("SUCCES");
+				result.setResult(lmTransactionsJson);
 			} else {
 				result.setCode("204");
 				result.setMsg("No user!");
 			}
 
-		} else {
-			result.setCode("400");
-			result.setMsg("Search criteria is empty!");
+		} catch (Exception exception) {
+			result.setCode("500");
+			result.setMsg("Exception occurec while searching Transactions");
 		}
-
-		//AjaxResponseBody will be converted into json format and send back to client.
 		return result;
-
-	}
-
-	private boolean isValidSearchCriteria(SearchCriteria search) {
-
-		boolean valid = true;
-
-		if (search == null) {
-			valid = false;
-		}
-
-		if ((StringUtils.isEmpty(search.getUsername())) && (StringUtils.isEmpty(search.getEmail()))) {
-			valid = false;
-		}
-
-		return valid;
 	}
 }

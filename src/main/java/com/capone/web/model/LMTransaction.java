@@ -1,19 +1,44 @@
 package com.capone.web.model;
 
+import java.util.Date;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LMTransaction {
 
+	@JsonProperty("amount")
 	String amount;
+	@JsonProperty("is-pending")
 	String isPending;
+	@JsonProperty("account-id")
 	String accountId;
+	@JsonProperty("aggregration-time")
 	String aggregrationTime;
+	@JsonProperty("transaction-id")
 	String transanctionId;
+	@JsonProperty("raw-merchant")
+	String rawMerchant;
+	@JsonProperty("categorization")
 	String catg;
+	@JsonProperty("merchant")
 	String merchant;
-	String transactionTime;
+	@JsonProperty("transaction-time")
+	Date transactionTime;
 	
+	public Date getTransactionTime() {
+		return transactionTime;
+	}
+	public String getRawMerchant() {
+		return rawMerchant;
+	}
+	public void setRawMerchant(String rawMerchant) {
+		this.rawMerchant = rawMerchant;
+	}
+	public void setTransactionTime(Date transactionTime) {
+		this.transactionTime = transactionTime;
+	}
 	public String getAmount() {
 		return amount;
 	}
@@ -56,11 +81,4 @@ public class LMTransaction {
 	public void setMerchant(String merchant) {
 		this.merchant = merchant;
 	}
-	public String getTransactionTime() {
-		return transactionTime;
-	}
-	public void setTransactionTime(String transactionTime) {
-		this.transactionTime = transactionTime;
-	}
-	
 }

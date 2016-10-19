@@ -31,31 +31,20 @@
 		<form class="form-horizontal" id="search-form">
 			<div class="form-group form-group-lg">
 				<div class="radio">
-				  <label><input type="radio" name="optradio">Get All Transactions monthly</label>
+				  <label><input type="radio" name="optradio" id="getAllTrans">Get All Transactions monthly</label>
 				</div>
 				<div class="radio">
-				  <label><input type="radio" name="optradio">Average of Transactions</label>
+				  <label><input type="radio" name="optradio" id="igndou" >Ignore Dougnuts</label>
+				</div>
+				<div class="radio">
+				  <label><input type="radio" name="optradio" id="igncc" >Ignore Credit Card Payments</label>
 				</div>
 				
-			</div>
-			<div id="avg-trans">
-				<div class="radio">
-				  <label><input type="avgRadio" name="optradio" disabled>Monthly</label>
-				</div>
-				<div class="radio">
-				  <label><input type="avgRadio" name="optradio" disabled>Querterly</label>
-				</div>
-				<div class="radio">
-				  <label><input type="avgRadio" name="optradio" disabled>Half Yearly</label>
-				</div>
-				<div class="radio">
-				  <label><input type="avgRadio" name="optradio" disabled>Yearly</label>
-				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
 					<button type="submit" id="bth-search"
-						class="btn btn-primary btn-lg">Search</button>
+						class="btn btn-primary btn-lg">Search Transactions</button>
 				</div>
 			</div>
 		</form>
@@ -69,7 +58,7 @@
 <script>
 	jQuery(document).ready(function($) {
 
-		$("#transactionsDiv").prop('disabled',true);
+		$("#btn-search").prop('disabled',true);
 		$("#search-form").submit(function(event) {
 
 			// Disble the search button
@@ -78,22 +67,41 @@
 			// Prevent the form from submitting via the browser.
 			event.preventDefault();
 
-			searchViaAjax();
+			if( $("#getAllTrans").is(':checked') ) {
+				searchViaAjax("search/api/getSearchResult");	
+			} else if( $("#getAllTrans").is(':checked') ) {
+				searchViaAjax("search/api/getSearchResultWithoutDougnuts");	
+			} else if( $("#getAllTrans").is(':checked') ) {
+				searchViaAjax("search/api/getSearchResultWithoutCC");	
+			}
+			
 
+		});
+		$("#getAllTrans").click(function(event) {
+			enableSearchButton(true);
+			$("#mtly").prop("disabled", true);
+			$("#qter").prop("disabled", true);
+			$("#hlf").prop("disabled", true);
+			$("#yrly").prop("disabled", true);
+		});
+		$("#avgTrans").click(function(event) {
+			enableSearchButton(true);
+			$("#mtly").prop("disabled", false);
+			$("#qter").prop("disabled", false);
+			$("#hlf").prop("disabled", false);
+			$("#yrly").prop("disabled", false);
+			
 		});
 
 	});
 
-	function searchViaAjax() {
+	function searchViaAjax(url) {
 
 		var search = {}
-		search["username"] = $("#username").val();
-		search["email"] = $("#email").val();
-
 		$.ajax({
 			type : "POST",
 			contentType : "application/json",
-			url : "${home}search/api/getSearchResult",
+			url : "${home}"+url,
 			data : JSON.stringify(search),
 			dataType : 'json',
 			timeout : 100000,
