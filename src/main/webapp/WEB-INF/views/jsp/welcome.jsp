@@ -104,44 +104,26 @@
 </div>
 <script>
 	jQuery(document).ready(function($) {
-
 		$("#btn-search").prop('disabled',true);
 		$("#search-form").submit(function(event) {
-
 			if($("#form-username").val()) {
 				$( '#' + $(this).data('modal-id') ).modal();
 			} else {
 				// Disble the search button
 				enableSearchButton(false);
-	
 				// Prevent the form from submitting via the browser.
 				event.preventDefault();
-	
+				$('#transactionsResult').html("");
 				if( $("#getAllTrans").is(':checked') ) {
 					searchViaAjax("search/api/getSearchResult");	
-				} else if( $("#getAllTrans").is(':checked') ) {
+				} else if( $("#igndou").is(':checked') ) {
 					searchViaAjax("search/api/getSearchResultWithoutDougnuts");	
-				} else if( $("#getAllTrans").is(':checked') ) {
+				} else if( $("#igncc").is(':checked') ) {
 					searchViaAjax("search/api/getSearchResultWithoutCC");	
 				}
 			}
 			
 
-		});
-		$("#getAllTrans").click(function(event) {
-			enableSearchButton(true);
-			$("#mtly").prop("disabled", true);
-			$("#qter").prop("disabled", true);
-			$("#hlf").prop("disabled", true);
-			$("#yrly").prop("disabled", true);
-		});
-		$("#avgTrans").click(function(event) {
-			enableSearchButton(true);
-			$("#mtly").prop("disabled", false);
-			$("#qter").prop("disabled", false);
-			$("#hlf").prop("disabled", false);
-			$("#yrly").prop("disabled", false);
-			
 		});
 	    /*
 		    Form validation
@@ -201,7 +183,6 @@
 	}
 
 	function display(data) {
-		$("#transactionsDiv").prop('disabled',false);
 		var json = "<pre>"
 				+ JSON.stringify(data, null, 4) + "</pre>";
 		$('#transactionsResult').html(json);

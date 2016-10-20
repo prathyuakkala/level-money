@@ -12,6 +12,8 @@ import java.util.TreeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.capone.web.helper.HttpHelper;
+import com.capone.web.model.LMAccount;
+import com.capone.web.model.LMAccountList;
 import com.capone.web.model.LMTransaction;
 import com.capone.web.model.LMTransactionList;
 import com.fasterxml.jackson.core.JsonParseException;
@@ -19,39 +21,97 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
+@SuppressWarnings("unchecked")
 public class LMTransactionsServiceImpl implements LMTransactionsService {
 
 	@Autowired
 	private HttpHelper httpHelper;
+	
+	private static final String CONST_DONUT_1 = "DUNKIN #";
+	private static final String CONST_DONUT_2 = "Krispy Kreme Donuts";
 
+	@Override
 	public Map getTransactions() throws JsonParseException, JsonMappingException, IOException {
 		return populateTransactionToMap(getAllTransactionsFromLM());
 	}
 
 	@Override
-	public Map<String, Object> getTransactionsWithoutDonuts()
+	public Map getTransactionsWithoutDonuts()
 			throws JsonParseException, JsonMappingException, IOException {
 		LMTransactionList lmTransactionList = getAllTransactionsFromLM();
+		LMTransactionList lmTransactionListWoDougnuts = new LMTransactionList();
 		for( LMTransaction lmTransaction : lmTransactionList.getTransactions()) {
-			
+			if( lmTransaction.getMerchant() != null && !lmTransaction.getMerchant().contains(CONST_DONUT_1) 
+					&& !lmTransaction.getMerchant().contains(CONST_DONUT_2) ) {
+				lmTransactionListWoDougnuts.getTransactions().add(lmTransaction);
+			} 
 		}
-		return null;
+		return populateTransactionToMap(lmTransactionListWoDougnuts);
 	}
 
 	@Override
 	public Map<String, Object> getTransactionsWithoutCCPayments()
 			throws JsonParseException, JsonMappingException, IOException {
-		// TODO Auto-generated method stub
-		return null;
+		LMTransactionList lmTransactionList = getAllTransactionsFromLM();
+		ObjectMapper mapper = new ObjectMapper();
+		/*
+		 * We are making backend call to double check the credit card account 
+		 */
+		String ccAccountId = "";
+		String chkAccountId = "";
+		String jsonAsString = httpHelper.httpClientPost("get-accounts", null);
+		LMAccountList lmAccounts =  mapper.readValue(jsonAsString,LMAccountList.class);
+		if( lmAccounts.getLmAccount().size() > 0 ) {
+			for( LMAccount lmAccount : lmAccounts.getLmAccount() ) {
+				if( lmAccount.getAcctName().contains("Credit Card") ) {
+					ccAccountId = lmAccount.getAccountId();
+				} else if(  lmAccount.getAcctName().contains("Checking")  ) {
+					chkAccountId = lmAccount.getAccountId();
+				}
+			}
+		}
+		LMTransaction cclmTransaction = null;
+		List<LMTransaction> ccPaymentTransactions = new ArrayList<LMTransaction>();
+		for( LMTransaction lmTransaction : lmTransactionList.getTransactions()) {
+			if( lmTransaction.getAccountId().equals(ccAccountId) && !lmTransaction.getAmount().startsWith("-")) {
+				cclmTransaction = lmTransaction;
+			} else if( cclmTransaction != null && lmTransaction.getAccountId().equals(chkAccountId) 
+					&& !lmTransaction.getAmount().startsWith("-") && 
+					( cclmTransaction.getTransactionTime().getTime() - lmTransaction.getTransactionTime().getTime() ) <= 86400000) {
+				ccPaymentTransactions.add(cclmTransaction);
+			}
+		}
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+		for( LMTransaction ccPaymentTransaction : ccPaymentTransactions ) {
+			Map<String, Object> resultChildMap = new HashMap<String, Object>();
+			resultChildMap.put("account-id",ccPaymentTransaction.getAccountId());
+			resultChildMap.put("merchant",ccPaymentTransaction.getMerchant());
+			resultChildMap.put("amount",ccPaymentTransaction.getAmount());
+			resultChildMap.put("transaction-time",ccPaymentTransaction.getTransactionTime().toString());
+			resultList.add(resultChildMap);
+		}
+		resultMap.put("transactions", resultList);
+		return resultMap;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 * @throws IOException
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 */
 	private LMTransactionList getAllTransactionsFromLM() throws IOException, JsonParseException, JsonMappingException {
 		ObjectMapper mapper = new ObjectMapper();
-		String jsonAsString = httpHelper.httpClientPost("get-all-transactions", "");
+		String jsonAsString = httpHelper.httpClientPost("get-all-transactions", null);
 		return mapper.readValue(jsonAsString,LMTransactionList.class);
 	}
+	
+	
 
-	private Map populateTransactionToMap(LMTransactionList lmTransactionList) {
+	private Map<String, Object> populateTransactionToMap(LMTransactionList lmTransactionList) {
 		
 		Map<String, List<LMTransaction>> monthlyExpdtrMap = new HashMap<String, List<LMTransaction>>();
 		for( LMTransaction lmTransaction : lmTransactionList.getTransactions()) {

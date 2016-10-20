@@ -1,5 +1,6 @@
 package com.capone.web.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -14,6 +15,9 @@ public class LMTransactionList {
 	private String error;
 
 	public List<LMTransaction> getTransactions() {
+		if( this.transactions == null ) {
+			this.transactions = new ArrayList<LMTransaction>();
+		}
 		return transactions;
 	}
 
