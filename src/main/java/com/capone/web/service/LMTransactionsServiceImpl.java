@@ -19,7 +19,11 @@ import com.capone.web.model.LMTransactionList;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+/**
+ * Implementation class for service layer
+ * @author Prathyusha
+ * @since 10-18-2016
+ */
 @Service
 @SuppressWarnings("unchecked")
 public class LMTransactionsServiceImpl implements LMTransactionsService {
@@ -29,12 +33,17 @@ public class LMTransactionsServiceImpl implements LMTransactionsService {
 	
 	private static final String CONST_DONUT_1 = "DUNKIN #";
 	private static final String CONST_DONUT_2 = "Krispy Kreme Donuts";
-
+    /**
+     * This method returns all transactions of a user 
+     */
 	@Override
 	public Map getTransactions() throws JsonParseException, JsonMappingException, IOException {
 		return populateTransactionToMap(getAllTransactionsFromLM());
 	}
-
+	/**
+     * This method returns all transactions of a user 
+     * excluding the donut transactions
+     */
 	@Override
 	public Map getTransactionsWithoutDonuts()
 			throws JsonParseException, JsonMappingException, IOException {
@@ -48,7 +57,10 @@ public class LMTransactionsServiceImpl implements LMTransactionsService {
 		}
 		return populateTransactionToMap(lmTransactionListWoDougnuts);
 	}
-
+	/**
+     * This method returns all transactions of a user 
+     * excluding the credit card payments
+     */
 	@Override
 	public Map<String, Object> getTransactionsWithoutCCPayments()
 			throws JsonParseException, JsonMappingException, IOException {

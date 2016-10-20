@@ -13,7 +13,11 @@ import java.net.MalformedURLException;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+/**
+ * Helper class to add some post request params
+ * @author Prathyusha
+ * @since 10-18-2016
+ */
 @Component
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class HttpHelper {
@@ -24,7 +28,7 @@ public class HttpHelper {
 	private static final int UID = 1110590645;
 
 
-	public String httpClientPost(String transactionType, String params) {
+	public String httpClientPost(String transactionType, Map<String, Object> params) {
 
 		HttpURLConnection conn = null;
 		String output = null;
@@ -36,9 +40,10 @@ public class HttpHelper {
 			conn.setRequestProperty("Content-Type", "application/json");
 			conn.setRequestProperty("Accept", "application/json");
 			Map<String, Object> parmsMap = new HashMap();
-			parmsMap.put("uid", UID);
-			parmsMap.put("api-token", API_TOKEN);
-			parmsMap.put("token",TOKEN);
+			//parmsMap.put("uid", UID);
+			//parmsMap.put("api-token", API_TOKEN);
+			//parmsMap.put("token",TOKEN);
+			parmsMap.putAll(params);
 			parmsMap.put("json-verbose-response", false);
 			parmsMap.put("json-strict-mode", false);
 			Map<String, Object> argsMap = new HashMap();

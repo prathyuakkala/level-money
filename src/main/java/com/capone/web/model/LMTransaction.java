@@ -4,7 +4,11 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+/**
+ * Model class for transaction
+ * @author Prathyusha
+ * @since 10-18-2016
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LMTransaction {
 

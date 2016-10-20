@@ -2,7 +2,11 @@ package com.capone.web.model;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.capone.web.jsonview.Views;
-
+/**
+ * Model class for the JSON Representation for Response Object
+ * @author Prathyusha
+ * @since 10-18-2016
+ */
 public class LMResponseBody {
 
 	@JsonView(Views.Public.class)

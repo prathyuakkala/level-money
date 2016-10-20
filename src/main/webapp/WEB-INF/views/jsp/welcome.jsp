@@ -24,48 +24,6 @@
 		</div>
 	</div>
 </nav>
-
-<div class="container" style="min-height: 500px">
-
-	<div class="starter-template">
-		<h1>Search Transactions</h1>
-		<br>
-
-
-		<form class="form-horizontal" id="search-form">
-			<div class="form-group form-group-lg">
-				<div class="radio">
-					<label><input type="radio" name="optradio" id="getAllTrans">Get
-						All Transactions monthly</label>
-				</div>
-				<div class="radio">
-					<label><input type="radio" name="optradio" id="igndou">Ignore
-						Dougnuts</label>
-				</div>
-				<div class="radio">
-					<label><input type="radio" name="optradio" id="igncc">Ignore
-						Credit Card Payments</label>
-				</div>
-
-			</div>
-			<div class="form-group">
-				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit" id="bth-search"
-						class="btn btn-primary btn-lg">Search Transactions</button>
-				</div>
-			</div>
-		</form>
-		<div id="transactionsDiv">
-			<h4>Response</h4>
-			<div id="transactionsResult"
-				style="overflow-y: scroll; overflow-x: hidden; height: 400px;"></div>
-		</div>
-	</div>
-
-</div>
- <div class="top-big-link">
-  	<a class="btn btn-link-1 launch-modal" href="#" data-modal-id="modal-login">Modal Login</a>
-  </div>
 <!-- MODAL -->
 <div class="modal fade" id="modal-login" tabindex="-1" role="dialog"
 	aria-labelledby="modal-login-label" aria-hidden="true">
@@ -102,28 +60,71 @@
 		</div>
 	</div>
 </div>
+<div class="container" style="min-height: 500px">
+
+	<div class="starter-template">
+		<h1>Search Transactions</h1>
+		<br>
+
+
+		<form class="form-horizontal" id="search-form">
+			<div class="form-group form-group-lg">
+				<div class="radio">
+					<label><input type="radio" name="optradio" id="getAllTrans">Get
+						All Transactions monthly</label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="optradio" id="igndou">Ignore
+						Dougnuts</label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="optradio" id="igncc">Ignore
+						Credit Card Payments</label>
+				</div>
+
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" id="bth-search"
+						class="btn btn-primary btn-lg">Search Transactions</button>
+				</div>
+			</div>
+		</form>
+		<div id="transactionsDiv">
+			<h4>Response</h4>
+			<div id="transactionsResult"
+				style="overflow-y: scroll; overflow-x: hidden; height: 400px;"></div>
+		</div>
+	</div>
+</div>
+ <div class="top-big-link" id="modal-link">
+  	<a class="btn btn-link-1 launch-modal" href="#" data-modal-id="modal-login"></a>
+  </div>
+
 <script>
 	jQuery(document).ready(function($) {
 		$("#btn-search").prop('disabled',true);
 		$("#search-form").submit(function(event) {
-			if($("#form-username").val()) {
-				$( '#' + $(this).data('modal-id') ).modal();
-			} else {
-				// Disble the search button
-				enableSearchButton(false);
-				// Prevent the form from submitting via the browser.
-				event.preventDefault();
-				$('#transactionsResult').html("");
-				if( $("#getAllTrans").is(':checked') ) {
-					searchViaAjax("search/api/getSearchResult");	
-				} else if( $("#igndou").is(':checked') ) {
-					searchViaAjax("search/api/getSearchResultWithoutDougnuts");	
-				} else if( $("#igncc").is(':checked') ) {
-					searchViaAjax("search/api/getSearchResultWithoutCC");	
-				}
+			if( !$("#getAllTrans").is(':checked') && !$("#igndou").is(':checked') && !$("#igncc").is(':checked') ) {
+				$('#transactionsResult').html(" Please select any one of the options above.... ");
+				return;
+			}				
+			if($("#form-username").val() == "") {
+				 $('#modal-link').find('a').trigger('click');
+				 return;
+			} 
+			// Disble the search button
+			enableSearchButton(false);
+			// Prevent the form from submitting via the browser.
+			event.preventDefault();
+			$('#transactionsResult').html("");
+			if( $("#getAllTrans").is(':checked') ) {
+				loginViaAjax("search/api/getSearchResult");	
+			} else if( $("#igndou").is(':checked') ) {
+				loginViaAjax("search/api/getSearchResultWithoutDougnuts");	
+			} else if( $("#igncc").is(':checked') ) {
+				loginViaAjax("search/api/getSearchResultWithoutCC");	
 			}
-			
-
 		});
 	    /*
 		    Form validation
@@ -154,7 +155,37 @@
 		});
 
 	});
-
+	
+	/* function loginViaAjax( url ) {
+		var search = {}
+		search["password"] = $("#form-password").val();
+		search["email"] = $("#form-username").val();
+		$.ajax({
+			type : "POST",
+			contentType : "application/json",
+			url : "${home}login",
+			data : JSON.stringify(search),
+			dataType : 'json',
+			timeout : 100000,
+			success : function(data) {
+				//console.log("SUCCESS: ", data);
+				/* if( data.code != 200) {
+					searchViaAjax(url)
+				} else {
+					$('#transactionsResult').html( " Login Failure, Please try again..." );
+				} *
+			},
+			error : function(e) {
+				console.log("ERROR: ", e);
+				display(e);
+			},
+			done : function(e) {
+				console.log("DONE");
+				enableSearchButton(true);
+			}
+		});
+	} */
+	
 	function searchViaAjax(url) {
 		$.ajax({
 			type : "POST",
@@ -163,7 +194,7 @@
 			dataType : 'json',
 			timeout : 100000,
 			success : function(data) {
-				console.log("SUCCESS: ", data);
+				//console.log("SUCCESS: ", data);
 				display(data);
 			},
 			error : function(e) {

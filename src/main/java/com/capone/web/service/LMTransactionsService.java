@@ -9,6 +9,11 @@ import com.capone.web.model.LMTransactionList;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+/**
+ * Interface for the service layer
+ * @author Prathyusha
+ * @since 10-18-2016
+ */
 public interface LMTransactionsService {
 	
 	

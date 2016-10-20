@@ -9,16 +9,28 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
  
+/**
+ * This is a configuration class for level money application 
+ * @author Prathyusha
+ * @since 10-18-2016
+ */
 @EnableWebMvc
 @Configuration
 @ComponentScan({ "com.capone.web" })
 public class SpringWebConfiguration extends WebMvcConfigurerAdapter {
  
+	/**
+	 * Adding static resource to view
+	 */
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
 	}
 	
+	/**
+	 * Adding prefix and suffix to the view
+	 * @return viewResolver
+	 */
 	@Bean
 	public InternalResourceViewResolver viewResolver() {
 		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();

@@ -3,7 +3,11 @@ package com.capone.servlet;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import com.capone.config.SpringWebConfiguration;
-
+/**
+ * Initializer class
+ * @author Prathyusha
+ * @since 10-18-2016
+ */
 public class LevelMoneyWebInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
 	@Override

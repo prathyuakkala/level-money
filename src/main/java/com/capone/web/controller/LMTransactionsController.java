@@ -13,9 +13,19 @@ import com.capone.web.model.LMResponseBody;
 import com.capone.web.service.LMTransactionsService;
 import com.fasterxml.jackson.annotation.JsonView;
 
+/**
+ * Controller class
+ * @author Prathyusha
+ * @since 10-18-2016
+ */
 @RestController
 public class LMTransactionsController {
-
+    
+	/**
+	 * This method calls the corresponding service 
+	 * layers' method depending on the request uri
+	 * to get the transactions.
+	 */
 	@Autowired
 	private LMTransactionsService lmTransactionsService;
 
@@ -37,7 +47,7 @@ public class LMTransactionsController {
 			}
 			if (!lmTransactionsJson.isEmpty()) {
 				result.setCode("200");
-				result.setMsg("SUCCES");
+				result.setMsg("SUCCESS");
 				result.setResult(lmTransactionsJson);
 			} else {
 				result.setCode("204");
@@ -45,7 +55,7 @@ public class LMTransactionsController {
 			}
 		} catch (Exception exception) {
 			result.setCode("500");
-			result.setMsg("Exception occurec while searching Transactions");
+			result.setMsg("Exception occured while searching Transactions");
 		}
 		return result;
 	}
