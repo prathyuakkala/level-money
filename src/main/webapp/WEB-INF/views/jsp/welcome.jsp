@@ -34,9 +34,8 @@
 				<button type="button" class="close" data-dismiss="modal">
 					<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
 				</button>
-				<h3 class="modal-title" id="modal-login-label">Login to our
-					site</h3>
-				<p>Enter your username and password to log on:</p>
+				<h3 class="modal-title" id="modal-login-label">Login</h3>
+				<p>Enter your username and password to log on </p>
 			</div>
 
 			<div class="modal-body">
@@ -55,7 +54,7 @@
 							type="password" name="form-password" placeholder="Password..."
 							class="form-password form-control" id="form-password">
 					</div>
-					<button type="submit" class="btn">Sign in!</button>
+					<button type="submit" class="btn">Sign in !!</button>
 				</form>
 
 			</div>
