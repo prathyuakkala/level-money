@@ -12,21 +12,32 @@ import com.capone.web.model.User;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+/**
+ * Login service implementation class
+ * @author Prathyusha
+ * @since 10-18-2016
+ */
 @Service
 public class LoginServiceImpl implements LoginService {
 
 	
 	@Autowired
 	private HttpHelper httpHelper;
-	
+	/**
+     * This method authenticates the user 
+     * @param user
+	 * @return User
+	 * @throws IOException
+	 * @throws JsonParseException
+	 * @throws JsonMappingException 
+     */
 	@Override
 	public User validateUser(User user) throws JsonParseException, JsonMappingException, IOException {
-		Map<String, Object> parmsMap = new HashMap();
+		Map<String, Object> parmsMap = new HashMap<String, Object>();
 		parmsMap.put("email", user.getEmail());
 		parmsMap.put("password", user.getPassword());
 		
-		Map<String, Object> parmsMap2 = new HashMap();
+		Map<String, Object> parmsMap2 = new HashMap<String, Object>();
 		parmsMap2.put("api-token", user.getApiToken());
 		parmsMap2.put("json-verbose-response", false);
 		parmsMap2.put("json-strict-mode", false);

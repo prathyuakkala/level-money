@@ -2,6 +2,7 @@ package com.capone.web.controller;
 
 import java.util.Map;
 
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,28 +15,32 @@ import com.capone.web.model.LMResponseBody;
 import com.capone.web.model.User;
 import com.capone.web.service.LMTransactionsService;
 import com.capone.web.service.LoginService;
-import com.capone.web.service.LoginServiceImpl;
+
 import com.fasterxml.jackson.annotation.JsonView;
 
 /**
- * Controller class
+ * Controller class for Level Money transactions processing
  * @author Prathyusha
  * @since 10-18-2016
  */
 @RestController
 public class LMTransactionsController {
     
-	/**
-	 * This method calls the corresponding service 
-	 * layers' method depending on the request uri
-	 * to get the transactions.
-	 */
+	
 	@Autowired
 	private LMTransactionsService lmTransactionsService;
 
 	@Autowired
 	private LoginService loginService;
 	
+	/**
+	 * This method calls the corresponding service 
+	 * layers' method depending on the request uri
+	 * to get the transactions.
+	 * @param request
+	 * @param user
+	 * @return LMResponseBody
+	 */
 	@JsonView(Views.Public.class)
 	@RequestMapping(value = { "/search/api/getSearchResult", "/search/api/getSearchResultWithoutDougnuts",
 			"/search/api/getSearchResultWithoutCC" })

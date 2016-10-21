@@ -13,12 +13,24 @@ import com.capone.web.model.User;
 import com.capone.web.service.LoginService;
 import com.fasterxml.jackson.annotation.JsonView;
 
+/**
+ * Controller class for user login
+ * @author Prathyusha
+ * @since 10-18-2016
+ */
 @RestController
 public class LoginController {
 	
 	@Autowired
 	private LoginService loginService;
 	
+	/**
+	 * This method calls the login service 
+	 * layers' method to authenticate user
+	 * @param request
+	 * @param user
+	 * @return LMResponseBody
+	 */
 	@JsonView(Views.Public.class)
 	@RequestMapping(value = "/validateUser" )
 	public LMResponseBody validateUser( HttpServletRequest request,

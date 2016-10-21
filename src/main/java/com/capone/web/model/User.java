@@ -2,7 +2,11 @@ package com.capone.web.model;
 
 import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+/**
+ * Model class for user
+ * @author Prathyusha
+ * @since 10-18-2016
+ */
 @Component
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class User {

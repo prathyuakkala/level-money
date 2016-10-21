@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LMTransaction {
-
+  
 	@JsonProperty("amount")
 	String amount;
 	@JsonProperty("is-pending")

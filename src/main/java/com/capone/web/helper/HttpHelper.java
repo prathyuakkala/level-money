@@ -1,8 +1,8 @@
 package com.capone.web.helper;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -12,22 +12,25 @@ import java.net.MalformedURLException;
 
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
- * Helper class to add some post request params
+ * Helper class to add some of the post request params
  * @author Prathyusha
  * @since 10-18-2016
  */
 @Component
-@SuppressWarnings({ "unchecked", "rawtypes" })
+
 public class HttpHelper {
 	
 	private static final String BKND_URL = "https://2016.api.levelmoney.com/api/v2/core/";
-	private static final String API_TOKEN = "AppTokenForInterview";
-	private static final String TOKEN = "02A99E1646645488172CA089AD9CE184";
-	private static final int UID = 1110590645;
+	
 
-
+    /**
+     * To make HTTP post call
+     * @param transactionType
+     * @param parmsMapAsJson
+     * @return String
+     */
 	public String httpClientPost(String transactionType, String parmsMapAsJson) {
 
 		HttpURLConnection conn = null;

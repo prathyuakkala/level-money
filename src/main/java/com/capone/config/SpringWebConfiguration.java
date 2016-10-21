@@ -20,7 +20,8 @@ import org.springframework.web.servlet.view.JstlView;
 public class SpringWebConfiguration extends WebMvcConfigurerAdapter {
  
 	/**
-	 * Adding static resource to view
+	 * This method adds static resource to view
+	 * @param registry
 	 */
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -29,7 +30,7 @@ public class SpringWebConfiguration extends WebMvcConfigurerAdapter {
 	
 	/**
 	 * Adding prefix and suffix to the view
-	 * @return viewResolver
+	 * @return InternalResourceViewResolver
 	 */
 	@Bean
 	public InternalResourceViewResolver viewResolver() {
