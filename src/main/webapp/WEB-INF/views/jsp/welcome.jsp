@@ -40,7 +40,10 @@
 			</div>
 
 			<div class="modal-body">
-
+			<!-- Bad way to do this ... stil this is not proority  -->
+			
+				<input type="hidden" id="username" name="username"/>
+				<input type="hidden" id="password" name="password"/>
 				<form role="form" action="" method="post" class="login-form">
 					<div class="form-group">
 						<label class="sr-only" for="form-username">Username</label> <input
@@ -105,25 +108,25 @@
 	jQuery(document).ready(function($) {
 		$("#btn-search").prop('disabled',true);
 		$("#search-form").submit(function(event) {
+			$('#transactionsResult').html("");
 			if( !$("#getAllTrans").is(':checked') && !$("#igndou").is(':checked') && !$("#igncc").is(':checked') ) {
 				$('#transactionsResult').html(" Please select any one of the options above.... ");
-				return;
+				return false;
 			}				
-			if($("#form-username").val() == "") {
+			if( $("#username").val() === "" || $("#password").val() === "" ) {
 				 $('#modal-link').find('a').trigger('click');
-				 return;
+				 return false;
 			} 
 			// Disble the search button
 			enableSearchButton(false);
 			// Prevent the form from submitting via the browser.
 			event.preventDefault();
-			$('#transactionsResult').html("");
 			if( $("#getAllTrans").is(':checked') ) {
-				loginViaAjax("search/api/getSearchResult");	
+				searchViaAjax("search/api/getSearchResult");	
 			} else if( $("#igndou").is(':checked') ) {
-				loginViaAjax("search/api/getSearchResultWithoutDougnuts");	
+				searchViaAjax("search/api/getSearchResultWithoutDougnuts");	
 			} else if( $("#igncc").is(':checked') ) {
-				loginViaAjax("search/api/getSearchResultWithoutCC");	
+				searchViaAjax("search/api/getSearchResultWithoutCC");	
 			}
 		});
 	    /*
@@ -134,17 +137,21 @@
 		});
 		
 		$('.login-form').on('submit', function(e) {
-			
-			$(this).find('input[type="text"], input[type="password"], textarea').each(function(){
-				if( $(this).val() == "" ) {
-					e.preventDefault();
-					$(this).addClass('input-error');
-				}
-				else {
-					$(this).removeClass('input-error');
-				}
-			});
-			
+			$('.close').click()
+			$("#password").val($("#form-password").val());
+			$("#username").val($("#form-username").val());
+			// Disble the search button
+			enableSearchButton(false);
+			// Prevent the form from submitting via the browser.
+			event.preventDefault();
+			if( $("#getAllTrans").is(':checked') ) {
+				searchViaAjax("search/api/getSearchResult");	
+			} else if( $("#igndou").is(':checked') ) {
+				searchViaAjax("search/api/getSearchResultWithoutDougnuts");	
+			} else if( $("#igncc").is(':checked') ) {
+				searchViaAjax("search/api/getSearchResultWithoutCC");	
+			}
+		
 		});
 		 /*
 	    	Modals
@@ -155,46 +162,20 @@
 		});
 
 	});
-	
-	/* function loginViaAjax( url ) {
-		var search = {}
+
+	function searchViaAjax(url) {
+		var search = {};
 		search["password"] = $("#form-password").val();
 		search["email"] = $("#form-username").val();
 		$.ajax({
 			type : "POST",
 			contentType : "application/json",
-			url : "${home}login",
 			data : JSON.stringify(search),
-			dataType : 'json',
-			timeout : 100000,
-			success : function(data) {
-				//console.log("SUCCESS: ", data);
-				/* if( data.code != 200) {
-					searchViaAjax(url)
-				} else {
-					$('#transactionsResult').html( " Login Failure, Please try again..." );
-				} *
-			},
-			error : function(e) {
-				console.log("ERROR: ", e);
-				display(e);
-			},
-			done : function(e) {
-				console.log("DONE");
-				enableSearchButton(true);
-			}
-		});
-	} */
-	
-	function searchViaAjax(url) {
-		$.ajax({
-			type : "POST",
-			contentType : "application/json",
 			url : "${home}"+url,
 			dataType : 'json',
 			timeout : 100000,
 			success : function(data) {
-				//console.log("SUCCESS: ", data);
+				console.log("SUCCESS: ", data);
 				display(data);
 			},
 			error : function(e) {

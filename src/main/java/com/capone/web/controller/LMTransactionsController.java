@@ -5,12 +5,16 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.capone.web.jsonview.Views;
 import com.capone.web.model.LMResponseBody;
+import com.capone.web.model.User;
 import com.capone.web.service.LMTransactionsService;
+import com.capone.web.service.LoginService;
+import com.capone.web.service.LoginServiceImpl;
 import com.fasterxml.jackson.annotation.JsonView;
 
 /**
@@ -29,21 +33,25 @@ public class LMTransactionsController {
 	@Autowired
 	private LMTransactionsService lmTransactionsService;
 
+	@Autowired
+	private LoginService loginService;
+	
 	@JsonView(Views.Public.class)
 	@RequestMapping(value = { "/search/api/getSearchResult", "/search/api/getSearchResultWithoutDougnuts",
 			"/search/api/getSearchResultWithoutCC" })
-	public LMResponseBody getAllTransactions( HttpServletRequest request ) {
-
+	public LMResponseBody getAllTransactions( HttpServletRequest request, @RequestBody User user ) {
 		LMResponseBody result = new LMResponseBody();
 		Map<String, Object> lmTransactionsJson = null;
 		try {
+			//Security is not important for now.
+			user = loginService.validateUser(user);
 			String uri = request.getRequestURI();
 			if( uri.endsWith("getSearchResult")) {
-				lmTransactionsJson = lmTransactionsService.getTransactions();
+				lmTransactionsJson = lmTransactionsService.getTransactions(user);
 			} else if( uri.endsWith("getSearchResultWithoutDougnuts") ){
-				lmTransactionsJson = lmTransactionsService.getTransactionsWithoutDonuts();
+				lmTransactionsJson = lmTransactionsService.getTransactionsWithoutDonuts(user);
 			} else {
-				lmTransactionsJson = lmTransactionsService.getTransactionsWithoutCCPayments();
+				lmTransactionsJson = lmTransactionsService.getTransactionsWithoutCCPayments(user);
 			}
 			if (!lmTransactionsJson.isEmpty()) {
 				result.setCode("200");

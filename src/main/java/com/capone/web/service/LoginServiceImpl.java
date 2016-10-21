@@ -21,17 +21,20 @@ public class LoginServiceImpl implements LoginService {
 	private HttpHelper httpHelper;
 	
 	@Override
-	public boolean validateUser(String email, String password) throws JsonParseException, JsonMappingException, IOException {
+	public User validateUser(User user) throws JsonParseException, JsonMappingException, IOException {
 		Map<String, Object> parmsMap = new HashMap();
-		parmsMap.put("email", email);
-		parmsMap.put("password", password);
-		String jsonAsString = httpHelper.httpClientPost("login", parmsMap);
+		parmsMap.put("email", user.getEmail());
+		parmsMap.put("password", user.getPassword());
+		
+		Map<String, Object> parmsMap2 = new HashMap();
+		parmsMap2.put("api-token", user.getApiToken());
+		parmsMap2.put("json-verbose-response", false);
+		parmsMap2.put("json-strict-mode", false);
+		parmsMap.put("args", parmsMap2);
+		String parmsMapAsJson = new ObjectMapper().writeValueAsString(parmsMap);
+		String jsonAsString = httpHelper.httpClientPost("login", parmsMapAsJson);
 		ObjectMapper mapper = new ObjectMapper();
-		User user = mapper.readValue(jsonAsString,User.class);
-		if( user != null && user.getToken() != null ) {
-			return true;
-		} 
-		return false;
+		return mapper.readValue(jsonAsString,User.class);
 	}
 
 }

@@ -16,6 +16,7 @@ import com.capone.web.model.LMAccount;
 import com.capone.web.model.LMAccountList;
 import com.capone.web.model.LMTransaction;
 import com.capone.web.model.LMTransactionList;
+import com.capone.web.model.User;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,17 +38,17 @@ public class LMTransactionsServiceImpl implements LMTransactionsService {
      * This method returns all transactions of a user 
      */
 	@Override
-	public Map getTransactions() throws JsonParseException, JsonMappingException, IOException {
-		return populateTransactionToMap(getAllTransactionsFromLM());
+	public Map getTransactions(User user) throws JsonParseException, JsonMappingException, IOException {
+		return populateTransactionToMap(getAllTransactionsFromLM(user));
 	}
 	/**
      * This method returns all transactions of a user 
      * excluding the donut transactions
      */
 	@Override
-	public Map getTransactionsWithoutDonuts()
+	public Map getTransactionsWithoutDonuts(User user)
 			throws JsonParseException, JsonMappingException, IOException {
-		LMTransactionList lmTransactionList = getAllTransactionsFromLM();
+		LMTransactionList lmTransactionList = getAllTransactionsFromLM(user);
 		LMTransactionList lmTransactionListWoDougnuts = new LMTransactionList();
 		for( LMTransaction lmTransaction : lmTransactionList.getTransactions()) {
 			if( lmTransaction.getMerchant() != null && !lmTransaction.getMerchant().contains(CONST_DONUT_1) 
@@ -62,9 +63,9 @@ public class LMTransactionsServiceImpl implements LMTransactionsService {
      * excluding the credit card payments
      */
 	@Override
-	public Map<String, Object> getTransactionsWithoutCCPayments()
+	public Map<String, Object> getTransactionsWithoutCCPayments(User user)
 			throws JsonParseException, JsonMappingException, IOException {
-		LMTransactionList lmTransactionList = getAllTransactionsFromLM();
+		LMTransactionList lmTransactionList = getAllTransactionsFromLM(user);
 		ObjectMapper mapper = new ObjectMapper();
 		/*
 		 * We are making backend call to double check the credit card account 
@@ -115,13 +116,20 @@ public class LMTransactionsServiceImpl implements LMTransactionsService {
 	 * @throws JsonParseException
 	 * @throws JsonMappingException
 	 */
-	private LMTransactionList getAllTransactionsFromLM() throws IOException, JsonParseException, JsonMappingException {
+	private LMTransactionList getAllTransactionsFromLM(User user) throws IOException, JsonParseException, JsonMappingException {
 		ObjectMapper mapper = new ObjectMapper();
-		String jsonAsString = httpHelper.httpClientPost("get-all-transactions", null);
+		Map<String, Object> parmsMap = new HashMap();
+		parmsMap.put("uid", user.getUid());
+		parmsMap.put("api-token", user.getApiToken());
+		parmsMap.put("token", user.getToken());
+		parmsMap.put("json-verbose-response", false);
+		parmsMap.put("json-strict-mode", false);
+		Map<String, Object> argsMap = new HashMap();
+		argsMap.put("args", parmsMap);
+		String parmsMapAsJson = new ObjectMapper().writeValueAsString(argsMap);
+		String jsonAsString = httpHelper.httpClientPost("get-all-transactions", parmsMapAsJson);
 		return mapper.readValue(jsonAsString,LMTransactionList.class);
 	}
-	
-	
 
 	private Map<String, Object> populateTransactionToMap(LMTransactionList lmTransactionList) {
 		

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.capone.web.model.LMTransaction;
 import com.capone.web.model.LMTransactionList;
+import com.capone.web.model.User;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
@@ -17,10 +18,10 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 public interface LMTransactionsService {
 	
 	
-	public Map<String, Object>  getTransactions() throws JsonParseException, JsonMappingException, IOException;
+	public Map<String, Object>  getTransactions(User user) throws JsonParseException, JsonMappingException, IOException;
 	
-	public Map<String, Object>  getTransactionsWithoutDonuts() throws JsonParseException, JsonMappingException, IOException;
+	public Map<String, Object>  getTransactionsWithoutDonuts(User user) throws JsonParseException, JsonMappingException, IOException;
 	
-	public Map<String, Object>  getTransactionsWithoutCCPayments() throws JsonParseException, JsonMappingException, IOException;
+	public Map<String, Object>  getTransactionsWithoutCCPayments(User user) throws JsonParseException, JsonMappingException, IOException;
 
 }

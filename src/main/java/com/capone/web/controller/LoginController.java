@@ -9,28 +9,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.capone.web.jsonview.Views;
 import com.capone.web.model.LMResponseBody;
+import com.capone.web.model.User;
 import com.capone.web.service.LoginService;
 import com.fasterxml.jackson.annotation.JsonView;
 
 @RestController
 public class LoginController {
 	
-	//
 	@Autowired
 	private LoginService loginService;
 	
 	@JsonView(Views.Public.class)
 	@RequestMapping(value = "/validateUser" )
 	public LMResponseBody validateUser( HttpServletRequest request,
-			@RequestBody String email, 
-			@RequestBody String password) {
+			@RequestBody User user) {
 		LMResponseBody result = new LMResponseBody();
 		try {
-			boolean isValid = loginService.validateUser(email, password);
-			if( isValid ) {
+			user = loginService.validateUser(user);
+			if( user.getToken() != null ) {
 				result.setCode("200");
 				result.setMsg("SUCCESS");
-				result.setResult(isValid);
+				result.setResult(true);
 			} else {
 				result.setCode("204");
 				result.setMsg("ERROR");

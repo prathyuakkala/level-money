@@ -1,10 +1,10 @@
 package com.capone.web.model;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Component
-@Scope("session")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User {
 
 	String email;
