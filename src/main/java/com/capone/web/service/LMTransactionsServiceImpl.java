@@ -23,7 +23,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 /**
- * Implementation class for service layer
+ * Implementation class for Transactions service layer
  * @author Prathyusha
  * @since 10-18-2016
  */
@@ -131,6 +131,12 @@ public class LMTransactionsServiceImpl implements LMTransactionsService {
 		resultMap.put("transactions", resultChildMap);
 		return resultMap;
 	}
+	
+	/**
+	 * This method is used to populate Transactions to a Map
+	 * @param ccPaymentTransactions
+	 * @return List<Map<String, Object>>
+	 */
 	private List<Map<String, Object>> populateTransactionMap(List<LMTransaction> ccPaymentTransactions) {
 		List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
 		for( LMTransaction ccPaymentTransaction : ccPaymentTransactions ) {
